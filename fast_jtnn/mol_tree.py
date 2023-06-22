@@ -120,13 +120,16 @@ def main_mol_tree(oinput, ovocab, MAX_TREE_WIDTH=50):
         for i, line in enumerate(input_file.readlines()):
             smiles = line.strip().split()[0]
             alert = False
-            mol = MolTree(smiles)
-            for c in mol.nodes:
-                if c.mol.GetNumAtoms() > MAX_TREE_WIDTH:
-                    alert = True
-                cset.add(c.smiles)
-            if len(mol.nodes) > 1 and alert:
-                sys.stderr.write('[WARNING]: %d-th molecule %s has a high tree-width.\n' % (i + 1, smiles))
+            try : 
+                mol = MolTree(smiles)
+                for c in mol.nodes:
+                    if c.mol.GetNumAtoms() > MAX_TREE_WIDTH:
+                        alert = True
+                    cset.add(c.smiles)
+                if len(mol.nodes) > 1 and alert:
+                    sys.stderr.write('[WARNING]: %d-th molecule %s has a high tree-width.\n' % (i + 1, smiles))
+            except : 
+                continue
     
     with open(ovocab, 'w') as vocab_file:
         for x in cset:
